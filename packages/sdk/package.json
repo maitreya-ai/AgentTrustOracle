@@ -5,6 +5,7 @@
   "description": "Client SDK for the Agent Trust Oracle: read scores onchain, verify Merkle proofs, query the x402 score API, and build program instructions.",
   "exports": {
     ".": "./src/index.ts",
+    "./node": "./src/node.ts",
     "./x402": "./src/x402.ts"
   },
   "dependencies": {

@@ -1,5 +1,9 @@
-import type { AgentIdentity } from "@ato/core";
-import { AGENT_REGISTRY_8004, Erc8004Provider, type IdentityProvider } from "@ato/solana";
+import {
+  AGENT_REGISTRY_8004,
+  Erc8004Provider,
+  type IdentityProvider,
+  type RegistryAgent,
+} from "@ato/solana";
 import type { IndexerContext } from "./context";
 
 /** Pull every agent from the configured registries and upsert identities + wallet profiles. */
@@ -9,7 +13,7 @@ export async function syncRegistries(ctx: IndexerContext) {
     new Erc8004Provider(ctx.rpc as never, AGENT_REGISTRY_8004[cluster]),
   ];
   for (const provider of providers) {
-    const agents: AgentIdentity[] = [];
+    const agents: RegistryAgent[] = [];
     for await (const a of provider.listAgents()) agents.push(a);
     await ctx.repo.upsertAgents(agents);
     await ctx.repo.ensureProfiles(

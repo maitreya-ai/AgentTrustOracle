@@ -34,16 +34,34 @@ export type Cluster = "mainnet-beta" | "devnet" | "localnet";
 export interface Stablecoin {
   symbol: string;
   decimals: number;
+  /** Owning token program (PYUSD is Token-2022). */
+  tokenProgram: Address;
 }
 
 export const STABLECOINS: Record<Cluster, Record<Address, Stablecoin>> = {
   "mainnet-beta": {
-    EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v: { symbol: "USDC", decimals: 6 },
-    Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB: { symbol: "USDT", decimals: 6 },
-    "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo": { symbol: "PYUSD", decimals: 6 },
+    EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v: {
+      symbol: "USDC",
+      decimals: 6,
+      tokenProgram: PROGRAMS.splToken,
+    },
+    Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB: {
+      symbol: "USDT",
+      decimals: 6,
+      tokenProgram: PROGRAMS.splToken,
+    },
+    "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo": {
+      symbol: "PYUSD",
+      decimals: 6,
+      tokenProgram: PROGRAMS.token2022,
+    },
   },
   devnet: {
-    "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU": { symbol: "USDC", decimals: 6 },
+    "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU": {
+      symbol: "USDC",
+      decimals: 6,
+      tokenProgram: PROGRAMS.splToken,
+    },
   },
   localnet: {},
 };

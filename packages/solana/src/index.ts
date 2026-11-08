@@ -1,3 +1,4 @@
+export * from "./accounts";
 export * from "./classify";
 export * from "./decode";
 export * from "./facilitators";

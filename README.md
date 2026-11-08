@@ -144,8 +144,33 @@ fixtures/                       cross-language parity vectors (TS → Rust)
 docs/                           overview · architecture · methodology & threat model
 ```
 
+## Devnet deployment
+
+|             |                                                                                                                                                   |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Program     | [`2amJRdRNf4XyNGYH2gc4sQyvmKBQVN62pieHmSvMo3HJ`](https://explorer.solana.com/address/2amJRdRNf4XyNGYH2gc4sQyvmKBQVN62pieHmSvMo3HJ?cluster=devnet) |
+| Config PDA  | `["config"]`. Admin and publisher keys are separate; the admin is the upgrade authority                                                           |
+| First epoch | Root `7137bace…`, covering 4,918 agents (4,917 synced from the devnet 8004 registry)                                                              |
+
+What has run end to end on devnet:
+
+1. Registry sync decoded all 4,917 live 8004 `AgentAccount`s (748 bytes each).
+2. The API took **real x402 payments** (402 challenge → USDC `TransferChecked` sponsored by the PayAI facilitator).
+3. The indexer classified those settlements as `x402_exact`, with facilitator and memo.
+4. The scorer committed epoch 1, and the publisher wrote `publish_epoch` + `upsert_score`.
+5. A consumer read the `AgentScore`, verified its leaf against the onchain root, landed `verify_score_proof` + `assert_trust`, and saw `assert_trust(STANDARD)` rejected with `ScoreTooLow`.
+
+Reproduce:
+
+```bash
+bun run oracle status                                   # config + latest epoch
+bun run indexer registry                                # sync 8004 agents
+bun run scripts/devnet/pay-api.ts http://localhost:8787 /v1/agents/<id>/score 2
+INDEXER_EXTRA_ADDRESSES=<payTo> bun run indexer backfill
+bun run score && PUBLISHER_DRY_RUN=false bun run publish-epoch
+bun run scripts/devnet/verify-onchain.ts <agent>
+```
+
 ## Status
 
-The MVP scaffold is complete and tested offchain. Next up are the program build, a devnet deploy, mainnet read-only indexing, and calibration on real data. See the [MVP plan](docs/project-overview.md#mvp-plan-46-weeks) and the [roadmap](docs/project-overview.md#roadmap-after-the-mvp), which includes staked multi-publisher attestation, a zk proof of scoring, write-back to the 8004 Reputation Registry, and an MCP tool for agents.
-
-> Program id `2amJRdRNf4XyNGYH2gc4sQyvmKBQVN62pieHmSvMo3HJ` is a development keypair. Not deployed yet.
+The MVP is deployed and running end to end on devnet. Next: mainnet read-only indexing over gRPC, calibration on real traffic, and a mainnet deploy behind a Squads multisig. See the [MVP plan](docs/project-overview.md#mvp-plan-46-weeks) and the [roadmap](docs/project-overview.md#roadmap-after-the-mvp), which includes staked multi-publisher attestation, a zk proof of scoring, write-back to the 8004 Reputation Registry, and an MCP tool for agents.

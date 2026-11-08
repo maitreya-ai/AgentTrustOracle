@@ -1,5 +1,7 @@
 import {
   address,
+  createDefaultRpcTransport,
+  createSolanaRpcFromTransport,
   type GetSignaturesForAddressApi,
   type GetTransactionApi,
   type Rpc,
@@ -8,6 +10,58 @@ import {
 import { fromRpcJson, type NormalizedTx, type RpcJsonTransaction } from "./normalize";
 
 export type IndexerRpc = Rpc<GetSignaturesForAddressApi & GetTransactionApi>;
+
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+function isRetryable(e: unknown): boolean {
+  const status = (e as { context?: { statusCode?: number } })?.context?.statusCode;
+  if (status === 429 || (status !== undefined && status >= 500)) return true;
+  return /\b(429|Too Many Requests|ECONNRESET|ETIMEDOUT|fetch failed)\b/i.test(String(e));
+}
+
+/** Honour `Retry-After` (seconds) on 429s when the endpoint sends it. */
+function retryAfterMs(e: unknown): number | undefined {
+  const headers = (e as { context?: { headers?: Headers } })?.context?.headers;
+  const v = headers?.get?.("retry-after");
+  const secs = v ? Number(v) : Number.NaN;
+  return Number.isFinite(secs) && secs > 0 ? secs * 1000 : undefined;
+}
+
+/**
+ * Solana RPC whose transport retries rate limits (429), 5xx and network resets with
+ * exponential backoff + jitter. Public endpoints throttle hard; production should use a
+ * dedicated RPC, but ingestion must survive bursts either way.
+ */
+export function createResilientRpc(
+  url: string,
+  opts: { retries?: number; baseDelayMs?: number; maxRps?: number } = {},
+) {
+  const retries = opts.retries ?? 8;
+  const base = opts.baseDelayMs ?? 400;
+  const spacing = opts.maxRps && opts.maxRps > 0 ? 1000 / opts.maxRps : 0;
+  let nextAt = 0;
+  // Client-side pacing: public endpoints allow ~40 calls/10s per method.
+  const pace = async () => {
+    if (spacing === 0) return;
+    const now = Date.now();
+    const at = Math.max(now, nextAt);
+    nextAt = at + spacing;
+    if (at > now) await sleep(at - now);
+  };
+  const inner = createDefaultRpcTransport({ url });
+  const transport = (async (...args: Parameters<typeof inner>) => {
+    for (let attempt = 0; ; attempt++) {
+      await pace();
+      try {
+        return await inner(...args);
+      } catch (e) {
+        if (attempt >= retries || !isRetryable(e)) throw e;
+        await sleep(retryAfterMs(e) ?? base * 2 ** attempt + Math.random() * base);
+      }
+    }
+  }) as typeof inner;
+  return createSolanaRpcFromTransport(transport);
+}
 
 export interface SignatureInfo {
   signature: string;
@@ -55,7 +109,8 @@ export async function fetchNormalizedTransaction(
   const tx = await rpc
     .getTransaction(signature(sig), {
       encoding: "json",
-      maxSupportedTransactionVersion: 0,
+      // v1 (SIMD-0385) transactions are live; x402 clients may build them.
+      maxSupportedTransactionVersion: 1 as 0,
       commitment: "confirmed",
     })
     .send();

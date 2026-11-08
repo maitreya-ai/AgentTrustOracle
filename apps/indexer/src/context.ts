@@ -1,6 +1,12 @@
 import { createDb, createRepo, type Repo } from "@ato/db";
-import { type ClassifyContext, type IndexerRpc, KNOWN_FACILITATORS, PROGRAMS } from "@ato/solana";
-import { createSolanaRpc } from "@solana/kit";
+import {
+  type ClassifyContext,
+  createResilientRpc,
+  type IndexerRpc,
+  KNOWN_FACILITATORS,
+  PROGRAMS,
+  paymentAddresses,
+} from "@ato/solana";
 import type { Env } from "./env";
 
 export interface IndexerContext {
@@ -21,15 +27,24 @@ export const INFRASTRUCTURE = new Set<string>([
 export async function createContext(env: Env): Promise<IndexerContext> {
   const repo = createRepo(createDb(env.DATABASE_URL));
   const agentWallets = await repo.agentWallets();
-  const watched = [
-    PROGRAMS.paymentChannels,
-    ...(env.SOLANA_CLUSTER === "mainnet-beta" ? Object.keys(KNOWN_FACILITATORS) : []),
+  // Wallets are expanded to their stablecoin ATAs: inbound transfers only reference those.
+  const wallets = [
     ...env.INDEXER_EXTRA_ADDRESSES,
     ...(env.INDEXER_WATCH_AGENT_WALLETS ? agentWallets : []),
   ];
+  const expanded = (
+    await Promise.all(wallets.map((w) => paymentAddresses(env.SOLANA_CLUSTER, w)))
+  ).flat();
+  const watched = [
+    ...(env.INDEXER_WATCH_CHANNELS ? [PROGRAMS.paymentChannels] : []),
+    ...(env.INDEXER_WATCH_FACILITATORS ? Object.keys(KNOWN_FACILITATORS) : []),
+    ...expanded,
+  ];
+  // Extra addresses are tracked for direct-transfer classification as well.
+  for (const w of env.INDEXER_EXTRA_ADDRESSES) agentWallets.add(w);
   return {
     env,
-    rpc: createSolanaRpc(env.SOLANA_RPC_URL),
+    rpc: createResilientRpc(env.SOLANA_RPC_URL, { maxRps: env.INDEXER_RPC_MAX_RPS }),
     repo,
     classify: {
       cluster: env.SOLANA_CLUSTER,

@@ -1,4 +1,4 @@
-import { type AgentIdentity, encodeAddress, sha256 } from "@ato/core";
+import { encodeAddress, sha256 } from "@ato/core";
 import {
   address,
   type Base58EncodedBytes,
@@ -8,7 +8,7 @@ import {
 } from "@solana/kit";
 import { bytesToBase58 } from "../normalize";
 import { AGENT_REGISTRY_8004 } from "../programs";
-import type { IdentityProvider } from "./types";
+import type { IdentityProvider, RegistryAgent } from "./types";
 
 /**
  * Decoder for `AgentAccount` in QuantuLabs/8004-solana (programs/agent-registry-8004/src/
@@ -79,7 +79,7 @@ export function decodeErc8004Agent(data: Uint8Array): Erc8004AgentAccount {
 }
 
 /** Map a registry record to the scorer's identity model. */
-export function toAgentIdentity(a: Erc8004AgentAccount): AgentIdentity {
+export function toAgentIdentity(a: Erc8004AgentAccount): RegistryAgent {
   return {
     id: a.asset,
     registry: "8004",
@@ -89,6 +89,7 @@ export function toAgentIdentity(a: Erc8004AgentAccount): AgentIdentity {
     owner: a.owner,
     creator: a.creator,
     ...(a.parentAsset ? { parent: a.parentAsset } : {}),
+    ...(a.agentUri ? { agentUri: a.agentUri } : {}),
   };
 }
 
@@ -100,7 +101,7 @@ export class Erc8004Provider implements IdentityProvider {
     private readonly programId: string = AGENT_REGISTRY_8004["mainnet-beta"],
   ) {}
 
-  async *listAgents(): AsyncIterable<AgentIdentity> {
+  async *listAgents(): AsyncIterable<RegistryAgent> {
     const accounts = await this.rpc
       .getProgramAccounts(address(this.programId), {
         encoding: "base64",

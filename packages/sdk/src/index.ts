@@ -4,3 +4,4 @@ export * from "./constants";
 export * from "./instructions";
 export * from "./policy";
 export * from "./proof";
+export * from "./send";

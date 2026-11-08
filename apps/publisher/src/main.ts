@@ -9,32 +9,16 @@
  * Security: this is the only process holding a signing key. Run it isolated with a
  * dedicated publisher key; `admin` (a multisig) can rotate it via `update_config`.
  */
-import { readFileSync } from "node:fs";
 import { createDb, createRepo } from "@ato/db";
 import {
   fetchOracleConfig,
   getPublishEpochInstruction,
   getUpsertScoreInstruction,
+  sendInstructions,
   TRUST_ORACLE_PROGRAM_ID,
 } from "@ato/sdk";
-import {
-  type Address,
-  address,
-  appendTransactionMessageInstructions,
-  assertIsTransactionWithBlockhashLifetime,
-  createKeyPairSignerFromBytes,
-  createSolanaRpc,
-  createSolanaRpcSubscriptions,
-  createTransactionMessage,
-  getSignatureFromTransaction,
-  type Instruction,
-  pipe,
-  sendAndConfirmTransactionFactory,
-  setTransactionMessageFeePayerSigner,
-  setTransactionMessageLifetimeUsingBlockhash,
-  signTransactionMessageWithSigners,
-  type TransactionSigner,
-} from "@solana/kit";
+import { loadKeypairSigner } from "@ato/sdk/node";
+import { type Address, address, createSolanaRpc, createSolanaRpcSubscriptions } from "@solana/kit";
 import { z } from "zod";
 
 const env = z
@@ -53,6 +37,8 @@ const env = z
       .default("false")
       .transform((v) => v === "true"),
     PUBLISHER_BATCH_SIZE: z.coerce.number().int().min(1).max(8).default(5),
+    /** Agents with less raw inflow than this stay root-only (no rent spent on inactive agents). */
+    PUBLISHER_MIN_RAW_VOLUME_MICROS: z.coerce.bigint().default(1n),
     ORACLE_PROGRAM_ID: z.string().optional(),
   })
   .parse(process.env);
@@ -65,9 +51,7 @@ const rpc = createSolanaRpc(env.SOLANA_RPC_URL);
 const rpcSubscriptions = createSolanaRpcSubscriptions(
   env.SOLANA_WS_URL ?? env.SOLANA_RPC_URL.replace(/^http/, "ws"),
 );
-const signer = await createKeyPairSignerFromBytes(
-  Uint8Array.from(JSON.parse(readFileSync(env.PUBLISHER_KEYPAIR_PATH, "utf8")) as number[]),
-);
+const signer = await loadKeypairSigner(env.PUBLISHER_KEYPAIR_PATH);
 
 const epoch = await repo.latestEpoch("computed");
 if (!epoch) {
@@ -87,7 +71,9 @@ if (config.latestEpoch + 1n !== epoch.epoch) {
 }
 
 const rows = (await repo.scoresForEpoch(epoch.epoch)).filter(
-  (r) => env.PUBLISHER_INCLUDE_UNREGISTERED || r.registry !== "wallet",
+  (r) =>
+    (env.PUBLISHER_INCLUDE_UNREGISTERED || r.registry !== "wallet") &&
+    r.rawVolumeMicros >= env.PUBLISHER_MIN_RAW_VOLUME_MICROS,
 );
 const previous = await repo.lastPublished(rows.map((r) => r.agentId));
 const changed = rows.filter((r) => {
@@ -126,24 +112,12 @@ if (env.PUBLISHER_DRY_RUN) {
   process.exit(0);
 }
 
-const send = sendAndConfirmTransactionFactory({ rpc, rpcSubscriptions });
-async function submit(feePayer: TransactionSigner, ixs: Instruction[]): Promise<string> {
-  const { value: blockhash } = await rpc.getLatestBlockhash().send();
-  const message = pipe(
-    createTransactionMessage({ version: 0 }),
-    (m) => setTransactionMessageFeePayerSigner(feePayer, m),
-    (m) => setTransactionMessageLifetimeUsingBlockhash(blockhash, m),
-    (m) => appendTransactionMessageInstructions(ixs, m),
-  );
-  const tx = await signTransactionMessageWithSigners(message);
-  assertIsTransactionWithBlockhashLifetime(tx);
-  await send(tx, { commitment: "confirmed" });
-  return getSignatureFromTransaction(tx);
-}
+const submit = (ixs: Parameters<typeof sendInstructions>[2]) =>
+  sendInstructions({ rpc, rpcSubscriptions }, signer, ixs);
 
 await repo.setEpochStatus(epoch.epoch, "publishing");
 try {
-  const sig = await submit(signer, [publishIx]);
+  const sig = await submit([publishIx]);
   console.log(`published epoch ${epoch.epoch}: ${sig}`);
   for (let i = 0; i < changed.length; i += env.PUBLISHER_BATCH_SIZE) {
     const batch = changed.slice(i, i + env.PUBLISHER_BATCH_SIZE);
@@ -167,7 +141,7 @@ try {
         }),
       ),
     );
-    const s = await submit(signer, ixs);
+    const s = await submit(ixs);
     await repo.markScoresPublished(
       epoch.epoch,
       batch.map((r) => r.agentId),

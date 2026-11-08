@@ -30,15 +30,20 @@
     "program:build": "anchor build",
     "program:keys": "bun run scripts/program-keys.ts",
     "simulate": "bun run scripts/simulate.ts",
-    "demo:seed": "bun run scripts/seed-demo.ts"
+    "demo:seed": "bun run scripts/seed-demo.ts",
+    "oracle": "bun run scripts/oracle-admin.ts"
   },
   "devDependencies": {
     "@ato/core": "workspace:*",
     "@ato/db": "workspace:*",
     "@ato/sdk": "workspace:*",
+    "@ato/solana": "workspace:*",
     "@biomejs/biome": "2.6.6",
+    "@solana-program/token": "0.18.0",
     "@solana/kit": "8.6.0",
     "@types/bun": "1.4.4",
+    "@x402/fetch": "2.30.0",
+    "@x402/svm": "2.30.0",
     "typescript": "7.0.2"
   }
 }

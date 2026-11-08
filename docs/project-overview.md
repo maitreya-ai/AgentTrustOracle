@@ -98,8 +98,8 @@ Status reflects this repository.
 - [x] Anchor program storing scores onchain, plus `assert_trust` and `verify_score_proof`
 - [x] Zero-dependency interface crate and example integrator program
 - [x] Cross-language parity fixtures (Rust ⇄ TS)
-- [ ] Install the Solana toolchain, `anchor build`, run LiteSVM lifecycle tests
-- [ ] Devnet deploy + initialize; run the indexer against devnet facilitator traffic
+- [x] Solana toolchain, SBF build, LiteSVM lifecycle tests (locally and in CI)
+- [x] Devnet deploy + initialize; registry sync (4,917 live agents); real x402 payments indexed, scored, published and verified onchain
 - [ ] Mainnet read-only indexing (facilitators + channels) and a first public ecosystem stat
 - [ ] Calibrate the methodology on real data; publish v1 epochs
 - [ ] Mainnet program deploy behind a Squads multisig

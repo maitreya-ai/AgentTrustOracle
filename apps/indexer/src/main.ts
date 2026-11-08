@@ -28,7 +28,11 @@ switch (command) {
     break;
   case "backfill":
     for (const address of ctx.watched) {
-      console.log("[backfill]", await syncAddress(ctx, address, ctx.env.INDEXER_BACKFILL_PAGES));
+      try {
+        console.log("[backfill]", await syncAddress(ctx, address, ctx.env.INDEXER_BACKFILL_PAGES));
+      } catch (e) {
+        console.error(`[backfill] ${address} failed (cursor unchanged, safe to rerun):`, e);
+      }
     }
     process.exit(0);
     break;
