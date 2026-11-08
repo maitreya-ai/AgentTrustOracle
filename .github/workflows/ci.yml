@@ -1,0 +1,52 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  typescript:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.2
+      - run: bun install --frozen-lockfile
+      - run: bunx biome ci .
+      - run: bun run typecheck
+      - run: bun test
+      - name: program ids in sync
+        run: bun run program:keys --check
+      - name: parity fixtures up to date
+        run: bun run fixtures && git diff --exit-code fixtures/
+
+  rust:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # rust-toolchain.toml pins the host toolchain (Anchor 1.2 MSRV); rustup installs it.
+      - run: rustup show active-toolchain
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo fmt --all -- --check
+      - run: cargo clippy --workspace --all-targets -- -D warnings
+      # LiteSVM lifecycle tests skip unless target/deploy/trust_oracle.so exists (see sbf job).
+      - run: cargo test --workspace
+
+  sbf:
+    # Builds the onchain binary and runs the LiteSVM lifecycle tests against it.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Swatinem/rust-cache@v2
+      - name: install agave (solana) cli
+        run: |
+          sh -c "$(curl -sSfL https://release.anza.xyz/v4.4.1/install)"
+          echo "$HOME/.local/share/solana/install/active_release/bin" >> "$GITHUB_PATH"
+      - run: cargo build-sbf --manifest-path programs/trust-oracle/Cargo.toml
+      - run: cargo test -p program-tests

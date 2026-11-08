@@ -1,0 +1,44 @@
+{
+  "name": "agent-trust-oracle",
+  "private": true,
+  "type": "module",
+  "description": "Payment-grounded trust scores for Solana agents: index x402 + payment-channel settlements, strip wash trading and self-dealing, publish verifiable scores onchain.",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "packageManager": "bun@1.4.2",
+  "engines": {
+    "bun": ">=1.4.0"
+  },
+  "scripts": {
+    "dev:api": "bun --watch apps/api/src/server.ts",
+    "indexer": "bun apps/indexer/src/main.ts",
+    "score": "bun apps/scorer/src/main.ts",
+    "publish-epoch": "bun apps/publisher/src/main.ts",
+    "test": "bun test",
+    "test:rust": "cargo test --workspace",
+    "typecheck": "tsc -p tsconfig.json",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "check": "bun run lint && bun run typecheck && bun run test",
+    "db:up": "docker compose up -d postgres",
+    "db:down": "docker compose down",
+    "db:generate": "bun --filter @ato/db generate",
+    "db:migrate": "bun packages/db/src/migrate.ts",
+    "fixtures": "bun run scripts/generate-fixtures.ts",
+    "program:build": "anchor build",
+    "program:keys": "bun run scripts/program-keys.ts",
+    "simulate": "bun run scripts/simulate.ts",
+    "demo:seed": "bun run scripts/seed-demo.ts"
+  },
+  "devDependencies": {
+    "@ato/core": "workspace:*",
+    "@ato/db": "workspace:*",
+    "@ato/sdk": "workspace:*",
+    "@biomejs/biome": "2.6.6",
+    "@solana/kit": "8.6.0",
+    "@types/bun": "1.4.4",
+    "typescript": "7.0.2"
+  }
+}

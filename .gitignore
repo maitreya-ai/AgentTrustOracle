@@ -1,0 +1,26 @@
+# deps
+node_modules/
+
+# rust / anchor
+target/
+.anchor/
+test-ledger/
+.surfpool/
+
+# env + keys (never commit signing material)
+.env
+.env.*
+!.env.example
+*.keypair.json
+keys/
+
+# build output
+dist/
+*.tsbuildinfo
+coverage/
+
+# os / editor
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json

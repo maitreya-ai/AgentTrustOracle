@@ -1,0 +1,6 @@
+[toolchain]
+# Anchor 1.2.x MSRV. `cargo build-sbf` uses Solana platform-tools' own rustc;
+# this pins the host toolchain used for IDL generation and tests.
+channel = "1.89.0"
+components = ["rustfmt", "clippy"]
+profile = "minimal"

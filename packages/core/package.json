@@ -1,0 +1,15 @@
+{
+  "name": "@ato/core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Deterministic, chain-agnostic scoring engine: entity resolution, wash detection, trust propagation, Merkle commitments.",
+  "exports": {
+    ".": "./src/index.ts",
+    "./testing": "./src/testing.ts"
+  },
+  "dependencies": {
+    "@noble/hashes": "2.4.0",
+    "@scure/base": "2.4.0"
+  }
+}

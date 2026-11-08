@@ -1,0 +1,25 @@
+{
+  "name": "@ato/indexer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Ingests x402, payment-channel and agent-wallet settlements; syncs registries; resolves wallet funding.",
+  "scripts": {
+    "start": "bun src/main.ts",
+    "backfill": "bun src/main.ts backfill",
+    "poll": "bun src/main.ts poll",
+    "stream": "bun src/main.ts stream",
+    "registry": "bun src/main.ts registry",
+    "funding": "bun src/main.ts funding"
+  },
+  "dependencies": {
+    "@ato/core": "workspace:*",
+    "@ato/db": "workspace:*",
+    "@ato/solana": "workspace:*",
+    "@solana/kit": "8.6.0",
+    "zod": "4.6.7"
+  },
+  "optionalDependencies": {
+    "helius-laserstream": "2.0.0"
+  }
+}

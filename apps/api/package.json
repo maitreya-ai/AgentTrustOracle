@@ -1,0 +1,21 @@
+{
+  "name": "@ato/api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Score API on Hono/Bun. Free badges and proofs; full scores and reports paid per request via x402.",
+  "scripts": {
+    "dev": "bun --watch src/server.ts",
+    "start": "bun src/server.ts"
+  },
+  "dependencies": {
+    "@ato/core": "workspace:*",
+    "@ato/db": "workspace:*",
+    "@ato/sdk": "workspace:*",
+    "@x402/core": "2.30.0",
+    "@x402/hono": "2.30.0",
+    "@x402/svm": "2.30.0",
+    "hono": "4.13.17",
+    "zod": "4.6.7"
+  }
+}

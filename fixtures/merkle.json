@@ -1,0 +1,137 @@
+{
+  "root": "6bcb5b02e099cd035f03170c72db7a4ca91693f7da8d55508e8999a8bc220651",
+  "leaves": [
+    {
+      "agent": "FJLtnqxsuJN816CvA5nYq9HHy1MYTh9sNFJyngmSpTe7",
+      "registry": 0,
+      "epoch": "42",
+      "score": 0,
+      "confidence": 0,
+      "flags": 0,
+      "washRatioBps": 0,
+      "uniquePayers": 0,
+      "organicVolume": "0",
+      "agentHex": "d474fbd6655851dfb0f7c36b69988ec11c2c589c02b1083fa636905b2de5e7b8",
+      "encoded": "00d474fbd6655851dfb0f7c36b69988ec11c2c589c02b1083fa636905b2de5e7b8002a0000000000000000000000000000000000000000000000000000000000",
+      "hash": "835ab7d8e3dbdae45e51804da8ab572dcb8d70397635b417a271137819c83a5a",
+      "proof": [
+        "0cdb9c4d1e8944b27167b30e71ca40a423e09d42474f9d2db5cae7fd7a949a24",
+        "071a463aead00dead6f03b20125a04e7d788f56d9a57216d2218446d9a54160a",
+        "f413474f54142c24975990a7bf2bf4a57295c63dc7849dd2df51210c09ba097f"
+      ]
+    },
+    {
+      "agent": "BZ9PbHmWHkUPpY16uJeLMb7DMSQkQeL2yDQnbn4EBSw8",
+      "registry": 1,
+      "epoch": "42",
+      "score": 137,
+      "confidence": 1789,
+      "flags": 0,
+      "washRatioBps": 50,
+      "uniquePayers": 11,
+      "organicVolume": "1000000007",
+      "agentHex": "9cd0f0f230f5ea53f2b6c37faa93cd3ec56e086e2c24f3293afaf80687ae4647",
+      "encoded": "009cd0f0f230f5ea53f2b6c37faa93cd3ec56e086e2c24f3293afaf80687ae4647012a000000000000008900fd060000000032000b00000007ca9a3b00000000",
+      "hash": "0cdb9c4d1e8944b27167b30e71ca40a423e09d42474f9d2db5cae7fd7a949a24",
+      "proof": [
+        "835ab7d8e3dbdae45e51804da8ab572dcb8d70397635b417a271137819c83a5a",
+        "071a463aead00dead6f03b20125a04e7d788f56d9a57216d2218446d9a54160a",
+        "f413474f54142c24975990a7bf2bf4a57295c63dc7849dd2df51210c09ba097f"
+      ]
+    },
+    {
+      "agent": "Eu5KNB2TFxiCD8EB23disX8jJQNMGV44FMe6Tadc3mxF",
+      "registry": 2,
+      "epoch": "42",
+      "score": 274,
+      "confidence": 3578,
+      "flags": 0,
+      "washRatioBps": 100,
+      "uniquePayers": 22,
+      "organicVolume": "2000000014",
+      "agentHex": "ce7f0350ebcf466c33ef51f5a650a144fc0692283f67ec982c00a3cf4d600cf4",
+      "encoded": "00ce7f0350ebcf466c33ef51f5a650a144fc0692283f67ec982c00a3cf4d600cf4022a000000000000001201fa0d000000006400160000000e94357700000000",
+      "hash": "25ba8dd88f7f8fe33c1a9e3cc06ab3b4a8e85d732ca1d2a59588e411b07693c2",
+      "proof": [
+        "91a9994043b2dbe2ce9c958b0e76484fda81040cbe94f927f761bb3d38b5106a",
+        "bd1236e56fe38997f9640a4e245d0e7e62015e1fae14469d1d13413605a9e012",
+        "f413474f54142c24975990a7bf2bf4a57295c63dc7849dd2df51210c09ba097f"
+      ]
+    },
+    {
+      "agent": "CtvhJ7ABsDg5DFCa4BceuXc8a87st1U9eJv467QzypLV",
+      "registry": 0,
+      "epoch": "42",
+      "score": 411,
+      "confidence": 5367,
+      "flags": 2,
+      "washRatioBps": 150,
+      "uniquePayers": 33,
+      "organicVolume": "3000000021",
+      "agentHex": "b0bde3e9fbbbac2dc72bf275724f6ff59fd9a1c93564175e594e6818724b6bb6",
+      "encoded": "00b0bde3e9fbbbac2dc72bf275724f6ff59fd9a1c93564175e594e6818724b6bb6002a000000000000009b01f71402000000960021000000155ed0b200000000",
+      "hash": "91a9994043b2dbe2ce9c958b0e76484fda81040cbe94f927f761bb3d38b5106a",
+      "proof": [
+        "25ba8dd88f7f8fe33c1a9e3cc06ab3b4a8e85d732ca1d2a59588e411b07693c2",
+        "bd1236e56fe38997f9640a4e245d0e7e62015e1fae14469d1d13413605a9e012",
+        "f413474f54142c24975990a7bf2bf4a57295c63dc7849dd2df51210c09ba097f"
+      ]
+    },
+    {
+      "agent": "ENjtqhQNtA3LadJDFvgvne9V6paQCjFo5SDFm34hyNSd",
+      "registry": 1,
+      "epoch": "42",
+      "score": 548,
+      "confidence": 7156,
+      "flags": 0,
+      "washRatioBps": 200,
+      "uniquePayers": 44,
+      "organicVolume": "4000000028",
+      "agentHex": "c6b9a08fa3e7081b41e8d30edc82896169cf84f6d070c3a90173fc5119fee262",
+      "encoded": "00c6b9a08fa3e7081b41e8d30edc82896169cf84f6d070c3a90173fc5119fee262012a000000000000002402f41b00000000c8002c0000001c286bee00000000",
+      "hash": "99bf4d603a989ce6171c200596485e6122875e427dd3a4b30cb6ee1a1b40fa7a",
+      "proof": [
+        "1be1281056ad070ead0fb7185739f6241f0dc24c303ea159386b887f7b093251",
+        "27c7f7c589e8b953882c0777779156c655cc1aaaa2084aa1ba3b82d94f95eea0",
+        "8253da259a8666d9641b5daa85b1966b58eb031d907187d652ffbdf00975ff1e"
+      ]
+    },
+    {
+      "agent": "vYnrhM5LQKSjnpoYcvxRUn9py3H9HjbqteUni9dRyAQ",
+      "registry": 2,
+      "epoch": "42",
+      "score": 685,
+      "confidence": 8945,
+      "flags": 0,
+      "washRatioBps": 250,
+      "uniquePayers": 55,
+      "organicVolume": "5000000035",
+      "agentHex": "0db7ba89e17f816347047ed6e8691f95c59da1a2c23cecf9a3eee48c0e2c9ac1",
+      "encoded": "000db7ba89e17f816347047ed6e8691f95c59da1a2c23cecf9a3eee48c0e2c9ac1022a00000000000000ad02f12200000000fa003700000023f2052a01000000",
+      "hash": "1be1281056ad070ead0fb7185739f6241f0dc24c303ea159386b887f7b093251",
+      "proof": [
+        "99bf4d603a989ce6171c200596485e6122875e427dd3a4b30cb6ee1a1b40fa7a",
+        "27c7f7c589e8b953882c0777779156c655cc1aaaa2084aa1ba3b82d94f95eea0",
+        "8253da259a8666d9641b5daa85b1966b58eb031d907187d652ffbdf00975ff1e"
+      ]
+    },
+    {
+      "agent": "2M4SMqVSQaQwioFCr6tJk4Sf6mJPmsM1AefkP96EkvRv",
+      "registry": 0,
+      "epoch": "42",
+      "score": 822,
+      "confidence": 733,
+      "flags": 0,
+      "washRatioBps": 300,
+      "uniquePayers": 66,
+      "organicVolume": "6000000042",
+      "agentHex": "13ff30894071e474dbe4f30d7e70b2b3db10bee37d2ff0c106635c6bae5cb4c1",
+      "encoded": "0013ff30894071e474dbe4f30d7e70b2b3db10bee37d2ff0c106635c6bae5cb4c1002a000000000000003603dd02000000002c01420000002abca06501000000",
+      "hash": "27c7f7c589e8b953882c0777779156c655cc1aaaa2084aa1ba3b82d94f95eea0",
+      "proof": [
+        "80a837ff26a0da23e8915cc963b2f75656b8e735846f872906a48501868bf976",
+        "8253da259a8666d9641b5daa85b1966b58eb031d907187d652ffbdf00975ff1e"
+      ]
+    }
+  ]
+}

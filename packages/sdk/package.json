@@ -1,0 +1,30 @@
+{
+  "name": "@ato/sdk",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Client SDK for the Agent Trust Oracle: read scores onchain, verify Merkle proofs, query the x402 score API, and build program instructions.",
+  "exports": {
+    ".": "./src/index.ts",
+    "./x402": "./src/x402.ts"
+  },
+  "dependencies": {
+    "@ato/core": "workspace:*",
+    "@solana/kit": "8.6.0"
+  },
+  "peerDependencies": {
+    "@x402/fetch": "^2.30.0",
+    "@x402/svm": "^2.30.0"
+  },
+  "peerDependenciesMeta": {
+    "@x402/fetch": {
+      "optional": true
+    },
+    "@x402/svm": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@x402/fetch": "2.30.0",
+    "@x402/svm": "2.30.0"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "@ato/publisher",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Publishes computed epochs and changed scores to the trust-oracle program. Holds the publisher key: run isolated.",
+  "scripts": {
+    "start": "bun src/main.ts"
+  },
+  "dependencies": {
+    "@ato/core": "workspace:*",
+    "@ato/db": "workspace:*",
+    "@ato/sdk": "workspace:*",
+    "@solana/kit": "8.6.0",
+    "zod": "4.6.7"
+  }
+}

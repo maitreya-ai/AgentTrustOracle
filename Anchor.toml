@@ -1,0 +1,28 @@
+[toolchain]
+anchor_version = "1.2.2"
+solana_version = "4.4.1"
+package_manager = "bun"
+
+[features]
+resolution = true
+skip-lint = false
+
+[workspace]
+# Only the oracle is deployed. examples/ are integration samples.
+members = ["programs/trust-oracle"]
+
+[programs.localnet]
+trust_oracle = "2amJRdRNf4XyNGYH2gc4sQyvmKBQVN62pieHmSvMo3HJ"
+
+[programs.devnet]
+trust_oracle = "2amJRdRNf4XyNGYH2gc4sQyvmKBQVN62pieHmSvMo3HJ"
+
+[provider]
+cluster = "localnet"
+wallet = "~/.config/solana/id.json"
+
+[scripts]
+test = "cargo test -p trust-oracle"
+
+[test]
+skip_local_validator = true

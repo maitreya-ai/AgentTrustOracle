@@ -1,0 +1,14 @@
+{
+  "name": "@ato/solana",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Solana ingestion primitives: transaction normalisation, x402 / payment-channel / transfer classifiers, Agent Registry adapters, funding resolution.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@ato/core": "workspace:*",
+    "@solana/kit": "8.6.0"
+  }
+}

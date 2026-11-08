@@ -1,0 +1,22 @@
+{
+  "fields": {
+    "version": 1,
+    "bump": 253,
+    "registry": 0,
+    "agent": "5YtJyYYwHSq14g2y1gryPpM6d23esRxmwGtXrYxEVhWL",
+    "score": 742,
+    "confidence": 9312,
+    "flags": 40,
+    "washRatioBps": 125,
+    "uniquePayers": 418,
+    "organicVolume": "12345678901",
+    "rawVolume": "13000000000",
+    "epoch": "42",
+    "updatedSlot": "380000123",
+    "updatedAt": "1790000000",
+    "prevScore": 731,
+    "methodologyVersion": 1
+  },
+  "agentHex": "4399c4e30790375620b5fb58366c70472475ca8a5673ccf7843b5e2d4b6e5c15",
+  "hex": "f4560c1505db8d8b01fd004399c4e30790375620b5fb58366c70472475ca8a5673ccf7843b5e2d4b6e5c15e6026024280000007d00a2010000351cdcdf020000000042dc06030000002a000000000000007b57a61600000000803bb16a00000000db020100000000000000000000000000000000000000000000000000000000"
+}

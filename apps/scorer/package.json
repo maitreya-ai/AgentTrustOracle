@@ -1,0 +1,16 @@
+{
+  "name": "@ato/scorer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Computes a scoring epoch from indexed data and stores scores, proofs and the Merkle root.",
+  "scripts": {
+    "start": "bun src/main.ts"
+  },
+  "dependencies": {
+    "@ato/core": "workspace:*",
+    "@ato/db": "workspace:*",
+    "@ato/solana": "workspace:*",
+    "zod": "4.6.7"
+  }
+}

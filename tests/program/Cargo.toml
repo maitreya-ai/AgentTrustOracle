@@ -1,0 +1,20 @@
+[package]
+name = "program-tests"
+version = "0.1.0"
+description = "LiteSVM integration tests for the trust-oracle program (needs `anchor build` first)."
+edition.workspace = true
+rust-version.workspace = true
+publish = false
+
+[dependencies]
+
+[dev-dependencies]
+anchor-lang = { workspace = true }
+trust-oracle = { path = "../../programs/trust-oracle", features = ["no-entrypoint"] }
+trust-oracle-interface = { workspace = true }
+# Versions follow `anchor init --test-template litesvm` for Anchor 1.2.x.
+litesvm = "0.15.0"
+solana-message = "4"
+solana-transaction = "4"
+solana-signer = "3"
+solana-keypair = "3"

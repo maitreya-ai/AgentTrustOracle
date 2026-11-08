@@ -1,0 +1,7 @@
+[install]
+# Pin exact versions on `bun add` so the lockfile and manifests agree.
+exact = true
+
+[test]
+# Rust build output and generated clients never contain TS tests.
+pathIgnorePatterns = ["target/**", "**/node_modules/**"]
