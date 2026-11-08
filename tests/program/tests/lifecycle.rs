@@ -30,10 +30,14 @@ fn program_bytes() -> Option<Vec<u8>> {
     .ok()
 }
 
+/// Skips when the binary is missing, unless `REQUIRE_SBF` is set (CI), where it fails loudly.
 macro_rules! require_program {
     () => {
         match program_bytes() {
             Some(b) => b,
+            None if std::env::var_os("REQUIRE_SBF").is_some() => {
+                panic!("REQUIRE_SBF is set but target/deploy/trust_oracle.so is missing")
+            }
             None => {
                 eprintln!("skipping: target/deploy/trust_oracle.so not found (run `anchor build`)");
                 return;
