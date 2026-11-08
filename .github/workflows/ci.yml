@@ -55,15 +55,16 @@ jobs:
           path: |
             ~/.local/share/solana
             ~/.cache/solana
-          key: solana-agave-v4.4.1-platform-tools-${{ runner.os }}
+          key: solana-agave-v4.4.1-gh-platform-tools-${{ runner.os }}
       - name: install agave (solana) cli
         if: steps.solana-cache.outputs.cache-hit != 'true'
+        # Straight from the GitHub release (the release.anza.xyz installer has served
+        # truncated archives to CI runners); curl retries 5xx and broken transfers.
         run: |
-          for attempt in 1 2 3; do
-            sh -c "$(curl -sSfL https://release.anza.xyz/v4.4.1/install)" && exit 0
-            echo "agave install attempt $attempt failed; retrying" && sleep $((attempt * 15))
-          done
-          exit 1
+          curl -sSfL --retry 6 --retry-all-errors --retry-delay 10 -o /tmp/agave.tar.bz2 \
+            https://github.com/anza-xyz/agave/releases/download/v4.4.1/solana-release-x86_64-unknown-linux-gnu.tar.bz2
+          mkdir -p "$HOME/.local/share/solana/install/active_release"
+          tar -xjf /tmp/agave.tar.bz2 -C "$HOME/.local/share/solana/install/active_release" --strip-components=1
       - run: echo "$HOME/.local/share/solana/install/active_release/bin" >> "$GITHUB_PATH"
       - name: install platform-tools
         if: steps.solana-cache.outputs.cache-hit != 'true'
@@ -80,7 +81,7 @@ jobs:
           path: |
             ~/.local/share/solana
             ~/.cache/solana
-          key: solana-agave-v4.4.1-platform-tools-${{ runner.os }}
+          key: solana-agave-v4.4.1-gh-platform-tools-${{ runner.os }}
       - run: cargo build-sbf --manifest-path programs/trust-oracle/Cargo.toml
       - run: ls -la target/deploy/trust_oracle.so
       - run: cargo test -p program-tests
