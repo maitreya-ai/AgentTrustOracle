@@ -46,24 +46,41 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: Swatinem/rust-cache@v2
-      - name: cache agave (solana) cli
-        id: agave-cache
-        uses: actions/cache@v4
+      # Toolchain downloads (agave release, platform-tools from GitHub releases) are flaky:
+      # restore from cache, retry installs, and save the cache as soon as both succeed.
+      - name: restore solana toolchain
+        id: solana-cache
+        uses: actions/cache/restore@v4
         with:
           path: |
             ~/.local/share/solana
             ~/.cache/solana
-          key: agave-v4.4.1-${{ runner.os }}
+          key: solana-agave-v4.4.1-platform-tools-${{ runner.os }}
       - name: install agave (solana) cli
-        if: steps.agave-cache.outputs.cache-hit != 'true'
+        if: steps.solana-cache.outputs.cache-hit != 'true'
         run: |
-          # The release download is occasionally truncated; retry before failing.
           for attempt in 1 2 3; do
             sh -c "$(curl -sSfL https://release.anza.xyz/v4.4.1/install)" && exit 0
-            echo "agave install attempt $attempt failed; retrying" && sleep $((attempt * 10))
+            echo "agave install attempt $attempt failed; retrying" && sleep $((attempt * 15))
           done
           exit 1
       - run: echo "$HOME/.local/share/solana/install/active_release/bin" >> "$GITHUB_PATH"
+      - name: install platform-tools
+        if: steps.solana-cache.outputs.cache-hit != 'true'
+        run: |
+          for attempt in 1 2 3 4; do
+            cargo build-sbf --install-only && exit 0
+            echo "platform-tools attempt $attempt failed; retrying" && sleep $((attempt * 20))
+          done
+          exit 1
+      - name: save solana toolchain
+        if: steps.solana-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/.local/share/solana
+            ~/.cache/solana
+          key: solana-agave-v4.4.1-platform-tools-${{ runner.os }}
       - run: cargo build-sbf --manifest-path programs/trust-oracle/Cargo.toml
       - run: ls -la target/deploy/trust_oracle.so
       - run: cargo test -p program-tests
