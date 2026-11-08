@@ -46,10 +46,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: Swatinem/rust-cache@v2
+      - name: cache agave (solana) cli
+        id: agave-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.local/share/solana
+            ~/.cache/solana
+          key: agave-v4.4.1-${{ runner.os }}
       - name: install agave (solana) cli
+        if: steps.agave-cache.outputs.cache-hit != 'true'
         run: |
-          sh -c "$(curl -sSfL https://release.anza.xyz/v4.4.1/install)"
-          echo "$HOME/.local/share/solana/install/active_release/bin" >> "$GITHUB_PATH"
+          # The release download is occasionally truncated; retry before failing.
+          for attempt in 1 2 3; do
+            sh -c "$(curl -sSfL https://release.anza.xyz/v4.4.1/install)" && exit 0
+            echo "agave install attempt $attempt failed; retrying" && sleep $((attempt * 10))
+          done
+          exit 1
+      - run: echo "$HOME/.local/share/solana/install/active_release/bin" >> "$GITHUB_PATH"
       - run: cargo build-sbf --manifest-path programs/trust-oracle/Cargo.toml
       - run: ls -la target/deploy/trust_oracle.so
       - run: cargo test -p program-tests
