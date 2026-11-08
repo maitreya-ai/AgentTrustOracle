@@ -1,0 +1,42 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", monospace;
+  --color-ink: #06060a;
+  --color-panel: #0c0c14;
+  --color-sol-purple: #9945ff;
+  --color-sol-green: #14f195;
+  --color-sol-teal: #19d3c5;
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+  background: var(--color-ink);
+}
+
+body {
+  background: var(--color-ink);
+}
+
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.035) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 80%);
+}
+
+.text-gradient {
+  background: linear-gradient(92deg, #d6bcff 0%, #9945ff 35%, #19d3c5 70%, #14f195 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.glow {
+  background:
+    radial-gradient(40% 50% at 20% 0%, rgb(153 69 255 / 0.28), transparent 70%),
+    radial-gradient(35% 45% at 85% 10%, rgb(20 241 149 / 0.14), transparent 70%);
+}

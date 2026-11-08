@@ -31,7 +31,10 @@
     "program:keys": "bun run scripts/program-keys.ts",
     "simulate": "bun run scripts/simulate.ts",
     "demo:seed": "bun run scripts/seed-demo.ts",
-    "oracle": "bun run scripts/oracle-admin.ts"
+    "oracle": "bun run scripts/oracle-admin.ts",
+    "dev:web": "bun --filter @ato/web dev",
+    "build:web": "bun --filter @ato/web build",
+    "screenshots": "bun run scripts/screenshots.ts"
   },
   "devDependencies": {
     "@ato/core": "workspace:*",
@@ -44,6 +47,7 @@
     "@types/bun": "1.4.4",
     "@x402/fetch": "2.30.0",
     "@x402/svm": "2.30.0",
+    "puppeteer-core": "25.16.0",
     "typescript": "7.0.2"
   }
 }

@@ -21,6 +21,8 @@ jobs:
       - run: bunx biome ci .
       - run: bun run typecheck
       - run: bun test
+      - name: build landing page (includes its typecheck)
+        run: bun run build:web
       - name: program ids in sync
         run: bun run program:keys --check
       - name: parity fixtures up to date

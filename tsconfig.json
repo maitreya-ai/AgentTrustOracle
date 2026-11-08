@@ -20,5 +20,6 @@
     "packages/*/*.config.ts",
     "apps/*/src/**/*.ts",
     "scripts/**/*.ts"
-  ]
+  ],
+  "exclude": ["apps/web"]
 }

@@ -24,3 +24,8 @@ coverage/
 .idea/
 .vscode/*
 !.vscode/extensions.json
+
+# next.js
+.next/
+next-env.d.ts
+out/

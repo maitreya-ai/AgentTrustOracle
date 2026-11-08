@@ -13,7 +13,9 @@ Index real x402 and payment-channel settlements · strip wash trading and self-d
 ![x402](https://img.shields.io/badge/x402-v2-2E7D32)
 ![ERC-8004](https://img.shields.io/badge/ERC--8004-Agent%20Registry-1565C0)
 
-[Overview](docs/project-overview.md) · [Architecture](docs/architecture.md) · [Methodology & threat model](docs/methodology.md)
+[Overview](docs/project-overview.md) · [Architecture](docs/architecture.md) · [Methodology & threat model](docs/methodology.md) · [Landing page](#landing-page)
+
+<img src="docs/screenshots/landing-hero.png" alt="Agent Trust Oracle landing page: trust scores agents can't buy" width="100%" />
 
 </div>
 
@@ -100,6 +102,27 @@ const report = await oracle.report(agentId); // components, linked wallets, wash
 | `GET /v1/agents/:id/report`                                                         | $0.01  |
 | `POST /v1/scores/batch` (≤ 50)                                                      | $0.02  |
 
+## Landing page
+
+`apps/web` is a Next.js 16 + Tailwind 4 site with no hard-coded numbers. The demo score table is computed at build time by the production scoring engine (`runEpoch`). The **Live on devnet** panel reads the deployed program's config and latest `ScoreEpoch` from chain, and is revalidated every 5 minutes.
+
+<table>
+<tr>
+<td width="62%"><img src="docs/screenshots/landing-builders.png" alt="Builders section with Rust and TypeScript integration snippets" /></td>
+<td width="38%" rowspan="2" valign="top"><img src="docs/screenshots/landing-mobile.png" alt="Mobile view" /></td>
+</tr>
+<tr>
+<td><img src="docs/screenshots/landing-devnet.png" alt="Live devnet panel read from the deployed program" /></td>
+</tr>
+</table>
+
+```bash
+bun run dev:web                         # http://localhost:3000
+bun run build:web && bun run screenshots   # regenerate docs/screenshots with local Chrome
+```
+
+[Full-page screenshot](docs/screenshots/landing-full.png)
+
 ## Quick start
 
 Requires [Bun](https://bun.sh) ≥ 1.4 and Rust (via rustup). Postgres comes from Docker or any local server. The Solana/Anchor CLIs are only needed to build and deploy the program.
@@ -136,6 +159,7 @@ apps/
   scorer/     computes epoch N = last published + 1
   publisher/  writes epochs + changed scores onchain (only process with a key)
   api/        Hono on Bun, x402-paywalled
+  web/        landing page (Next.js 16 + Tailwind 4), live devnet panel
 programs/trust-oracle/          Anchor 1.2 program
 crates/trust-oracle-interface/  no_std, zero-dependency reader for other programs
 examples/trust-gated-vault/     integrator example
